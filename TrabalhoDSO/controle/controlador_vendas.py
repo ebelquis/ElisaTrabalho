@@ -10,6 +10,10 @@ class ControladorVendas():
     self.__vendas = []
     self.__tela_venda = TelaVenda()
 
+  @property
+  def vendas(self):
+    return self.__vendas
+
   def pega_venda_por_codigo(self, codigo: int):
     for venda in self.__vendas:
       if venda.codigo == int(codigo):

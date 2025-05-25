@@ -11,7 +11,7 @@ class TelaRelatorios(TesteNumeroOpcoes):
         print("2 - Análise de Produtos Mais Vendidos")
         print("3 - Vendas por Vendedor")
         print("0 - Retornar")
-
+        print()
         opcao = self.teste_numero_opcoes("Escolha a opção: ", [0, 1, 2, 3])
         print("\n")
         return opcao
@@ -25,7 +25,7 @@ class TelaRelatorios(TesteNumeroOpcoes):
         print()
 
     def mostra_analise_produtos_vendidos(self, dados_analise):
-        print("------ ANÁLISE DE PRODUTOS MAIS VENDIDOS ------")
+        print(f"{dados_analise['lugar']}º LUGAR")
         print("PRODUTO:", dados_analise['nome'])
         print("CÓDIGO:", dados_analise['codigo_produto'])
         print("QUANT TOTAL VENDIDA:", dados_analise['quantidade_total_vendida'])
@@ -33,7 +33,7 @@ class TelaRelatorios(TesteNumeroOpcoes):
         print()
 
     def mostra_vendas_por_vendedor(self, dados_vendedor):
-        print("----- VENDAS POR VENDEDOR -----")
+        print(f"{dados_vendedor['lugar']}º lugar")
         print("NOME:", dados_vendedor['nome'])
         print("CPF:", dados_vendedor['cpf'])
         print(f"VALOR TOTAL VENDIDO: R${dados_vendedor['valor_total_vendido']:.2f}")

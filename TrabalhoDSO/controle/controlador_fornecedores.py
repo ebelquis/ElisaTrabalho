@@ -21,6 +21,10 @@ class ControladorFornecedores:
         gumege.incluir_endereco("88037200", "Avenida Governador José Boabaid", "30")
         somar.incluir_endereco("95070380", "Rua Amâncio Miguel Ferreira", "229")
 
+    @property
+    def fornecedores(self):
+        return self.__fornecedores
+
     def pega_fornecedor_por_cnpj(self, cnpj: str):
         for fornecedor in self.__fornecedores:
             if int(fornecedor.cnpj) == int(cnpj):

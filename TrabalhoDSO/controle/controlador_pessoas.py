@@ -16,6 +16,14 @@ class ControladorPessoas():
         self.__vendedores.append(djonys)
         self.__clientes.append(ravi)
 
+    @property
+    def vendedores(self):
+        return self.__vendedores
+    
+    @property
+    def clientes(self):
+        return self.__clientes
+
     def pega_cliente_por_cpf(self, cpf: str):
         for cliente in self.__clientes:
             if cliente.cpf == cpf:

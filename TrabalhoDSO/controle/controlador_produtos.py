@@ -15,6 +15,10 @@ class ControladorProdutos():
         self.__produtos.append(caneca)
         self.__produtos.append(camisa)
 
+    @property
+    def produtos(self):
+        return self.__produtos
+
     def pega_produto_por_codigo(self, codigo: int):
         for i in self.__produtos:
             if i.codigo_produto == codigo:

@@ -3,6 +3,7 @@ from controle.controlador_fornecedores import ControladorFornecedores
 from controle.controlador_produtos import ControladorProdutos
 from controle.controlador_pessoas import ControladorPessoas
 from controle.controlador_pedidos import ControladorPedidos
+from controle.controlador_relatorios import ControladorRelatorios
 from limite.tela_sistema import TelaSistema
 
 
@@ -13,6 +14,7 @@ class ControladorSistema:
         self.__controlador_produtos = ControladorProdutos(self)
         self.__controlador_pessoas = ControladorPessoas(self)
         self.__controlador_pedidos = ControladorPedidos(self)
+        self.__controlador_relatorios = ControladorRelatorios(self)
         self.__tela_sistema = TelaSistema()
 
     @property
@@ -34,6 +36,10 @@ class ControladorSistema:
     @property
     def controlador_pedidos(self):
         return self.__controlador_pedidos
+    
+    @property
+    def controlador_relatorios(self):
+        return self.__controlador_relatorios
 
     def inicializa_sistema(self):
         self.abre_tela()
@@ -52,9 +58,15 @@ class ControladorSistema:
 
     def cadastra_pedido(self):
         self.__controlador_pedidos.abre_tela()
+    
+    def cadastra_relatorio(self):
+        self.__controlador_relatorios.abre_tela()
+
+    def abre_relatorios(self):
+        self.__controlador_relatorios.abre_tela()
 
     def encerra_sistema(self):
-        #mensagem de tchau
+        self.__tela_sistema.mostra_mensagem("!!!Obrigada por utilizar os serviços da A5!!!")
         exit(0)
 
     def abre_tela(self):
@@ -63,6 +75,7 @@ class ControladorSistema:
                         3: self.cadastra_produto,
                         4: self.cadastra_pessoa,
                         5: self.cadastra_pedido,
+                        6: self.abre_relatorios,
                         0: self.encerra_sistema}
 
         while True:
