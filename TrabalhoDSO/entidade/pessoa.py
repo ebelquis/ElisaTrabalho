@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class Pessoa(ABC):
     @abstractmethod
-    def __init__(self, nome, cpf, celular):
+    def __init__(self, nome: str, cpf: str, celular: int):
         self.__nome = nome
         self.__cpf = cpf
         self.__celular = celular
@@ -22,7 +22,6 @@ class Pessoa(ABC):
     @cpf.setter
     def cpf(self, cpf):
         self.__cpf = cpf
-
 
     @property
     def celular(self):

@@ -60,7 +60,7 @@ class ControladorProdutos():
                 if valor == int(valor):
                     produto.quant_estoque += int(valor) 
                 else:
-                    self.__tela_produto.mostra_mensagem("Coloque o valor um valor inteiro!")
+                    self.__tela_produto.mostra_mensagem("Coloque um valor inteiro!")
             else:
                 raise NaoEncontradoNaListaException()
         except Exception as e:
@@ -73,9 +73,9 @@ class ControladorProdutos():
         else:
             for produto in self.__produtos:
                 self.__tela_produto.mostra_produto({"nome": produto.nome,
-                                                "codigo_produto": produto.codigo_produto,
-                                                "preco_venda": produto.preco_venda,
-                                                "quant_estoque": produto.quant_estoque})
+                                                    "codigo_produto": produto.codigo_produto,
+                                                    "preco_venda": produto.preco_venda,
+                                                    "quant_estoque": produto.quant_estoque})
 
     def excluir_produto(self):
         self.lista_produtos()

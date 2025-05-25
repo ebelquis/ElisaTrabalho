@@ -45,7 +45,7 @@ class ControladorVendas():
           
           nova_venda = Venda(quantidade = quantidade, produto = produto,
                              data = dados_venda["data"], codigo = codigo_venda,
-                             cliente = cliente, vendedor = vendedor) #calcula o valor da venda no construtor da classe
+                             cliente = cliente, vendedor = vendedor) #valor da venda é calculado no construtor da classe
 
           self.__vendas.append(nova_venda)
           produto.quant_estoque -= quantidade
@@ -88,16 +88,16 @@ class ControladorVendas():
     try:
       codigo_venda = self.__tela_venda.seleciona_venda()
       venda = self.pega_venda_por_codigo(codigo_venda)
-      self.__tela_venda.mostra_mensagem("Dados da venda a ser deletada:")
-      self.__tela_venda.mostra_venda({"codigo": venda.codigo,
-                                      "vendedor": venda.vendedor.nome,
-                                      "cliente": venda.cliente.nome,
-                                      "produto": venda.produto.nome,
-                                      "quantidade": venda.quantidade,
-                                      "data": venda.data.strftime("%d/%m/%Y"),
-                                      "valor": venda.valor})
 
       if venda is not None:
+        self.__tela_venda.mostra_mensagem("Dados da venda a ser deletada:")
+        self.__tela_venda.mostra_venda({"codigo": venda.codigo,
+                                        "vendedor": venda.vendedor.nome,
+                                        "cliente": venda.cliente.nome,
+                                        "produto": venda.produto.nome,
+                                        "quantidade": venda.quantidade,
+                                        "data": venda.data.strftime("%d/%m/%Y"),
+                                        "valor": venda.valor})
         venda.vendedor.valor_vendido_total -= venda.valor
         venda.produto.quant_estoque += venda.quantidade
         self.__vendas.remove(venda)

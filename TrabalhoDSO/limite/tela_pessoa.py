@@ -10,25 +10,27 @@ class TelaPessoa(TesteNumeroOpcoes):
                 valor_recebido = input(mensagem)
                 try:
                     valor_recebido_tipo = int(valor_recebido)
-                    return valor_recebido_tipo
+                    if valor_recebido_tipo >= 0:
+                        return valor_recebido_tipo
+                    else:
+                        raise ValueError
                 except ValueError:
-                    print("Por favor, escreva somente com numeros inteiros. Exemplo 1234 (erro na digitação)")
+                    print("Por favor, escreva somente com numeros inteiros positivos. Exemplo: 123")
 
     def teste_do_cpf(self, mensagem=" "):
         while True:
             valor_recebido = input(mensagem)
             try:
-                valor_recebido_tipo = int(valor_recebido)
                 if len(valor_recebido) == 11:
-                    return valor_recebido_tipo
+                    return valor_recebido
                 else:
                     raise ValueError
             except ValueError:
-                print("Por favor, escreva somente com numeros inteiros e 9 digitos. Exemplo 1234 (erro na digitação)")
+                print("Por favor, escreva somente com números de 11 digitos. Exemplo: 1234567890")
 
     def tela_opcoes(self):
         print("-------- PESSOAS ----------")
-        print("Escolha a opção")
+        print()
         print("1 - Incluir Cliente")
         print("2 - Incluir Vendedor")
         print("3 - Listar Clientes")
@@ -38,35 +40,39 @@ class TelaPessoa(TesteNumeroOpcoes):
         print("0 - Retornar")
 
         opcao = self.teste_numero_opcoes("Escolha a opção: ", [0,1,2,3,4,5,6])
-        print("\n")
+        print()
         return opcao
 
     def pega_dados_pessoa(self):
         print("-------- DADOS PESSOA ---------")
+        print()
         nome = input("Nome: ")
         cpf = self.teste_do_cpf("CPF: ")
-        celular = self.teste_do_inteiro("Celular (deve ser escrito na forma: 984847837): ")
+        celular = self.teste_do_inteiro("Celular (somente números): ")
 
         return {"nome": nome, "cpf": cpf, "celular": celular}
 
     def mostra_cliente(self, dados_cliente):
         print("------CLIENTE------")
-        print("NOME DO CLIENTE: ", dados_cliente["nome"])
-        print("CPF DO CLIENTE: ", dados_cliente["cpf"])
-        print("CELULAR DO CLEINTE: ", dados_cliente["celular"])
-        print("\n")
+        print("NOME:", dados_cliente["nome"])
+        print("CPF:", dados_cliente["cpf"])
+        print("CELULAR:", dados_cliente["celular"])
+        print()
 
     def mostra_vendedor(self, dados_vendedor):
         print("------VENDEDOR------")
-        print("NOME DO VENDEDOR: ", dados_vendedor["nome"])
-        print("CPF DO VENDEDOR: ", dados_vendedor["cpf"])
-        print("CELULAR DO VENDEDOR: ", dados_vendedor["celular"])
-        print("VALOR VENDIDO TOTAL DO VENDEDOR: R$", dados_vendedor["valor_vendido_total"])
-        print("\n")
-    
+        print("NOME:", dados_vendedor["nome"])
+        print("CPF:", dados_vendedor["cpf"])
+        print("CELULAR:", dados_vendedor["celular"])
+        print("VALOR TOTAL VENDIDO: R$", dados_vendedor["valor_vendido_total"])
+        print()
+
     def seleciona_pessoa(self):
-        cpf = self.teste_do_inteiro("CPF da pessoa que deseja selecionar (deve conter somente numeros - sem caracteres especiais): ")
+        print("-------- SELECIONADOR DE PESSOA ----------")
+        cpf = self.teste_do_cpf("CPF da pessoa que deseja selecionar (apenas números): ")
+        print()    
         return cpf
 
     def mostra_mensagem(self, msg):
         print(msg)
+        print()
