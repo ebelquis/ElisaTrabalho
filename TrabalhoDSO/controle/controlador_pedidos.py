@@ -1,79 +1,95 @@
-from limite.tela_produto import TelaProduto
-from entidade.produto import Produto
-
+from limite.tela_pedido import TelaPedido
+from entidade.pedido import Pedido
+from excessoes.EncontradoNaListaException import EncontradoNaListaException
+from excessoes.NaoEncontradoNaListaException import NaoEncontradoNaListaException
 
 class ControladorPedidos():
     def __init__(self, controlador_sistema):
-        self.__produtos = []
+        self.__pedidos = []
         self.__controlador_sistema = controlador_sistema
-        self.__tela_produto = TelaProduto()
+        self.__tela_pedido = TelaPedido()
 
-    def pega_produto_por_codigo_produto(self, codigo_produto: int):
-        for i in self.__produtos:
-            if i.codigo_produto == codigo_produto:
+    def pega_pedido_por_codigo(self, codigo: int):
+        for i in self.__pedidos:
+            if i.codigo == codigo:
                 return i
         return None
 
-    def incluir_produto(self):
-        dados_produto = self.__tela_produto.pega_dados_produto()
-        codigo_produto = self.pega_produto_por_codigo_produto(dados_produto["codigo_produto"])
-        if codigo_produto is None:
-            produto = Produto(dados_produto["nome"], 
-                              dados_produto["codigo_produto"],
-                              dados_produto["preco_venda"],
-                              dados_produto["quant_estoque"])
-            self.__produtos.append(produto)
+    def incluir_pedido(self):
+        dados_pedido = self.__tela_pedido.pega_dados_pedido()
+        codigo_pedido = self.pega_pedido_por_codigo(dados_pedido["codigo"])
+        try:
+            if codigo_pedido is None:
+                objeto_fornecedor = self.__controlador_sistema.controlador_fornecedores.pega_fornecedor_por_cnpj(dados_pedido["cnpj"])
+                if objeto_fornecedor is not None:
+                    objeto_produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(dados_pedido["codigo_produto"])
+                    if int(objeto_fornecedor.produto.codigo_produto) == int(dados_pedido["codigo_produto"]):
+                        valor = (float(dados_pedido["quantidade"]) * float(objeto_fornecedor.preco) + float(dados_pedido["valor_frete"]))
+                        pedido = Pedido(int(dados_pedido["quantidade"]),
+                                        objeto_produto,
+                                        dados_pedido["data"],
+                                        valor,
+                                        dados_pedido["codigo"],
+                                        objeto_fornecedor,
+                                        dados_pedido["valor_frete"],
+                                        dados_pedido["prazo_entrega"])
+                        self.__pedidos.append(pedido)   
+                        objeto_produto.quant_estoque = int(objeto_produto.quant_estoque) + int(dados_pedido["quantidade"])
+                        self.__tela_pedido.mostra_mensagem("Adicionado com sucesso!")
+
+                    else:
+                        raise NaoEncontradoNaListaException("produto")
+                else:
+                    raise NaoEncontradoNaListaException("fornecedor")
+            else:
+                raise EncontradoNaListaException()
+        except Exception as e:
+            self.__tela_pedido.mostra_mensagem(e)
+
+    def lista_pedidos(self):
+        if len(self.__pedidos) != 0:
+            for pedido in self.__pedidos:
+                pedido = ({"codigo": pedido.codigo,
+                        "quantidade": pedido.quantidade,
+                        "nome_produto": pedido.produto.nome,
+                        "data": pedido.data,
+                        "valor": pedido.valor,
+                        "nome_fornecedor": pedido.fornecedor.nome, 
+                        "frete": pedido.frete,
+                        "prazo_entrega": pedido.prazo_entrega})
+                self.__tela_pedido.mostra_pedidos(pedido)
         else:
-            self.__tela_produto.mostra_mensagem("ATENCAO: Produto já existente")
+            self.__tela_pedido.mostra_mensagem("Não exite pedidos feitos!")
 
-    def alterar_preco_produto(self):
-        self.lista_produtos()
-        codigo_produto = self.__tela_produto.seleciona_produto()
-        produto = self.pega_produto_por_codigo_produto(codigo_produto)
-        if produto is not None:
-            valor = self.__tela_produto.pega_dados_produto_alterar()
-            produto.preco_venda = int(produto.preco_venda) + int(valor)
+    def excluir_pedido(self):
+        if len(self.__pedidos) != 0:
+            self.lista_pedidos()
+            codigo_pedido = self.__tela_pedido.seleciona_pedido()
+            pedido = self.pega_pedido_por_codigo(codigo_pedido)
+            try:
+                if pedido is not None:
+                    objeto_produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(pedido.produto.codigo_produto)
+                    objeto_produto.quant_estoque = int(objeto_produto.quant_estoque) - int(pedido.quantidade)
+                    self.__pedidos.remove(pedido)
+                    self.__tela_pedido.mostra_mensagem("Removido com sucesso!")
+                else:
+                    raise NaoEncontradoNaListaException("pedido")
+            except Exception as e:
+                self.__tela_pedido.mostra_mensagem(e)
         else:
-            self.__tela_produto.mostra_mensagem("ATENCAO: Produto não existente")
-
-    def alterar_estoque(self):
-        self.lista_produtos()
-        codigo_produto_produto = self.__tela_produto.seleciona_produto()
-        produto = self.pega_produto_por_codigo_produto(codigo_produto_produto)
-        if produto is not None:
-            valor = self.__tela_produto.pega_dados_produto_alterar()
-            produto.quant_estoque = int(produto.quant_estoque) + int(valor) 
-            self.lista_produtos()
-
-    def lista_produtos(self):
-        for produto in self.__produtos:
-            self.__tela_produto.mostra_produto({"nome": produto.nome,
-                                              "codigo_produto": produto.codigo_produto,
-                                              "preco_venda": produto.preco_venda,
-                                              "quant_estoque": produto.quant_estoque})
-
-    def excluir_produto(self):
-        self.lista_produtos()
-        codigo_produto_produto = self.__tela_produto.seleciona_produto()
-        produto = self.pega_produto_por_codigo_produto(codigo_produto_produto)
-        if produto is not None:
-            self.__produtos.remove(produto)
-        else:
-            self.__tela_produto.mostra_mensagem("ATENCAO: Produto não existente")
+            self.__tela_pedido.mostra_mensagem("Não exite pedidos para remover!")
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()
 
     def abre_tela(self):
-        lista_opcoes = {1: self.incluir_produto,
-                        2: self.alterar_preco_produto,
-                        3: self.alterar_estoque,
-                        4: self.lista_produtos,
-                        5: self.excluir_produto,
+        lista_opcoes = {1: self.incluir_pedido,
+                        2: self.lista_pedidos,
+                        3: self.excluir_pedido,
                         0: self.retornar}
 
         continua = True
         while continua:
-            opcao = self.__tela_produto.tela_opcoes()
+            opcao = self.__tela_pedido.tela_opcoes()
             if opcao in lista_opcoes:
                 lista_opcoes[opcao]()

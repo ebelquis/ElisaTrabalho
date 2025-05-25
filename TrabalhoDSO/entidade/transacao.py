@@ -4,6 +4,7 @@ from entidade.produto import Produto
 class Transacao:
     def __init__(self, quantidade: int, produto: Produto, data: datetime, valor: float, codigo: int):
         self.__produto = produto
+        self.__valor  = valor
         self.__quantidade = quantidade
         self.__data = data
         self.__codigo = codigo
@@ -31,7 +32,15 @@ class Transacao:
     @data.setter
     def data(self, data: datetime):
         self.__data = data
+
+    @property
+    def valor(self):
+        return self.__valor
     
+    @valor.setter
+    def valor(self, valor: float):
+        self.__valor = valor
+ 
     @property
     def codigo(self):
         return self.__codigo

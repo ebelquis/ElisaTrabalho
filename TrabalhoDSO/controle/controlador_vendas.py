@@ -28,13 +28,13 @@ class ControladorVendas():
           codigo_venda = int(dados_venda["codigo"])
           cliente = self.__controlador_sistema.controlador_pessoas.pega_cliente_por_cpf(dados_venda["cpf_cliente"])
           vendedor = self.__controlador_sistema.controlador_pessoas.pega_vendedor_por_cpf(dados_venda["cpf_vendedor"])
-          produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(dados_venda["codigo_produto"])
+          produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(codigo_produto)
           if cliente is None:
              raise NaoEncontradoNaListaException("cliente")
           if vendedor is None:
-             raise NaoEncontradoNaListaException("cliente")
+             raise NaoEncontradoNaListaException("vendedor")
           if produto is None:
-              raise NaoEncontradoNaListaException("cliente")
+              raise NaoEncontradoNaListaException("produto")
 
           if self.pega_venda_por_codigo(dados_venda["codigo"]) is not None:
                 raise EncontradoNaListaException("venda")
@@ -49,7 +49,8 @@ class ControladorVendas():
 
           self.__vendas.append(nova_venda)
           produto.quant_estoque -= quantidade
-          vendedor.valor_vendido_total += nova_venda.valor_total  
+          valor_venda = nova_venda.valor * produto.preco_venda
+          vendedor.valor_vendido_total += valor_venda
           self.__tela_venda.mostra_mensagem("Venda cadastrada com sucesso!")
           self.__tela_venda.mostra_venda({"codigo": nova_venda.codigo,
                                           "vendedor": nova_venda.vendedor.nome,
@@ -57,7 +58,7 @@ class ControladorVendas():
                                           "produto": nova_venda.produto.nome,
                                           "quantidade": nova_venda.quantidade,
                                           "data": nova_venda.data.strftime("%d/%m/%Y"),
-                                          "valor": nova_venda.valor_total})
+                                          "valor": valor_venda})
       except NaoEncontradoNaListaException as e:
             self.__tela_venda.mostra_mensagem(f"Erro: {e}")
       except EncontradoNaListaException as e:
@@ -69,9 +70,10 @@ class ControladorVendas():
 
   def lista_venda(self):
     if not self.__vendas:
-            self.__tela_venda.mostra_mensagem("Sem vendas cadastradas.")
-            return
-  
+      self.__tela_venda.mostra_mensagem("Sem vendas cadastradas.")
+      return
+    
+    self.__tela_venda.mostra_mensagem("-------- VENDAS CADASTRADAS --------")  
     for venda in self.__vendas:
       self.__tela_venda.mostra_venda({"codigo": venda.codigo,
                                       "vendedor": venda.vendedor.nome,
@@ -79,20 +81,21 @@ class ControladorVendas():
                                       "produto": venda.produto.nome,
                                       "quantidade": venda.quantidade,
                                       "data": venda.data.strftime("%d/%m/%Y"),
-                                      "valor": venda.valor_total})
+                                      "valor": venda.valor})
     
   def excluir_venda(self):
     self.lista_venda()
     try:
       codigo_venda = self.__tela_venda.seleciona_venda()
       venda = self.pega_venda_por_codigo(codigo_venda)
+      self.__tela_venda.mostra_mensagem("Dados da venda a ser deletada:")
       self.__tela_venda.mostra_venda({"codigo": venda.codigo,
                                       "vendedor": venda.vendedor.nome,
                                       "cliente": venda.cliente.nome,
                                       "produto": venda.produto.nome,
                                       "quantidade": venda.quantidade,
                                       "data": venda.data.strftime("%d/%m/%Y"),
-                                      "valor": venda.valor_total})
+                                      "valor": venda.valor})
 
       if venda is not None:
         venda.vendedor.valor_vendido_total -= venda.valor

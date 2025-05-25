@@ -1,7 +1,51 @@
 from datetime import datetime
+from excessoes.TesteNumeroOpcoesException import TesteNumeroOpcoes
 
 
-class TelaPedido():
+class TelaPedido(TesteNumeroOpcoes):
+
+    def __init__(self):
+        pass
+
+    def teste_do_cnpj(self, mensagem=" "):
+        while True:
+            valor_recebido = input(mensagem)
+            try:
+                valor_recebido_tipo = int(valor_recebido)
+                if len(valor_recebido) == 14:
+                    return valor_recebido_tipo
+                else:
+                    raise ValueError
+            except ValueError:
+                print("Por favor, escreva somente com numeros inteiros e coloque 14 digitos. Exemplo 1234 (erro na digitação)")
+
+    def teste_do_float(self, mensagem=" "):
+        while True:
+            valor_recebido = input(mensagem)
+            try:
+                valor_recebido_tipo = float(valor_recebido)
+                return valor_recebido_tipo
+            except ValueError:
+                print("Por favor, escreva somente com numeros. Exemplo 12.55 (erro na digitação)")
+
+    def teste_do_inteiro(self, mensagem=" "):
+        while True:
+            valor_recebido = input(mensagem)
+            try:
+                valor_recebido_tipo = int(valor_recebido)
+                return valor_recebido_tipo
+            except ValueError:
+                print("Por favor, escreva somente com numeros inteiros. Exemplo 1234 (erro na digitação)")
+
+    def teste_da_data(self, mensagem=" "):
+        while True:
+            try:
+                data = input(mensagem)
+                data_recebida = datetime.strptime(data, "%d/%m/%Y")  
+                return data_recebida
+            except ValueError:
+                print("Data inválida. Insira a data no formato (dd/mm/yyyy) (erro na digitacao).")
+
     def tela_opcoes(self):
         print("-------- PEDIDOS ----------")
         print("Escolha a opcao")
@@ -10,20 +54,19 @@ class TelaPedido():
         print("3 - Excluir Pedido")
         print("0 - Retornar")
 
-        opcao = int(input("Escolha a opcao: "))
-        print()
+        opcao = self.teste_numero_opcoes("Escolha a opção: ", [0,1,2,3])
+        print("\n")
         return opcao
 
     def pega_dados_pedido(self):
         print("-------- DADOS PEDIDOS ----------")
-        cnpj = input("CNPJ do fornecedor: ")
-        codigo = input("Codigo do pedido: ")
-        codigo_produto = input("Codigo do Produto: ")
-        quantidade = input("Quantidade do pedido: ")
-        data = input("Data do pedido feito (DD/MM/AAAA): ")
-        data = datetime.strptime(data, "%d/%m/%Y") #fazer tratamento de erro aqui AAAAA
-        valor_frete = input("Valor do frete do pedido: ")
-        prazo_entrega = input("Prazo do pedido (dias): ")
+        cnpj = self.teste_do_cnpj("CNPJ do fornecedor: ")
+        codigo = self.teste_do_inteiro("Codigo do pedido: ")
+        codigo_produto = self.teste_do_inteiro("Codigo do Produto: ")
+        quantidade = self.teste_do_inteiro("Quantidade do pedido: ")
+        data = self.teste_da_data("Data do pedido feito (DD/MM/AAAA): ")
+        valor_frete = self.teste_do_float("Valor do frete do pedido: ")
+        prazo_entrega = self.teste_do_inteiro("Prazo do pedido (quantidade de dias): ")
 
         return {"cnpj": cnpj, "codigo": codigo,
                 "codigo_produto": codigo_produto,
@@ -45,8 +88,8 @@ class TelaPedido():
         print("\n")
 
     def seleciona_pedido(self):
-        codigo = input("Código do pedido que deseja selecionar: ")
+        codigo = self.teste_do_inteiro("Código do pedido que deseja selecionar: ")
         return codigo
-
+    
     def mostra_mensagem(self, msg):
         print(msg)

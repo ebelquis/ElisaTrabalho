@@ -7,8 +7,8 @@ from entidade.produto import Produto
 class Venda(Transacao):
     def __init__(self, quantidade: int, produto: Produto, data: datetime,
                  codigo: int, cliente: Cliente, vendedor: Vendedor):
-        valor_total = produto.preco_venda * quantidade
-        super().__init__(quantidade, produto, data, valor_total, codigo)
+        valor = produto.preco_venda * quantidade
+        super().__init__(quantidade, produto, data, valor, codigo)
         self.__cliente = cliente
         self.__vendedor = vendedor
 
