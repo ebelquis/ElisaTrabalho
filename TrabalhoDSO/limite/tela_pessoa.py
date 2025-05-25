@@ -64,7 +64,7 @@ class TelaPessoa(TesteNumeroOpcoes):
         print("NOME:", dados_vendedor["nome"])
         print("CPF:", dados_vendedor["cpf"])
         print("CELULAR:", dados_vendedor["celular"])
-        print("VALOR TOTAL VENDIDO: R$", dados_vendedor["valor_vendido_total"])
+        print(f"VALOR TOTAL VENDIDO: R${dados_vendedor["valor_vendido_total"]}")
         print()
 
     def seleciona_pessoa(self):

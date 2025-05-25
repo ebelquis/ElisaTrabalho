@@ -1,6 +1,5 @@
 from limite.tela_venda import TelaVenda
 from entidade.venda import Venda
-from datetime import datetime
 from excessoes.NaoEncontradoNaListaException import NaoEncontradoNaListaException
 from excessoes.EncontradoNaListaException import EncontradoNaListaException
 
@@ -49,8 +48,8 @@ class ControladorVendas():
 
           self.__vendas.append(nova_venda)
           produto.quant_estoque -= quantidade
-          valor_venda = nova_venda.valor * produto.preco_venda
-          vendedor.valor_vendido_total += valor_venda
+          vendedor.valor_vendido_total += nova_venda.valor
+
           self.__tela_venda.mostra_mensagem("Venda cadastrada com sucesso!")
           self.__tela_venda.mostra_venda({"codigo": nova_venda.codigo,
                                           "vendedor": nova_venda.vendedor.nome,
@@ -58,7 +57,7 @@ class ControladorVendas():
                                           "produto": nova_venda.produto.nome,
                                           "quantidade": nova_venda.quantidade,
                                           "data": nova_venda.data.strftime("%d/%m/%Y"),
-                                          "valor": valor_venda})
+                                          "valor": nova_venda.valor})
       except NaoEncontradoNaListaException as e:
             self.__tela_venda.mostra_mensagem(f"Erro: {e}")
       except EncontradoNaListaException as e:
