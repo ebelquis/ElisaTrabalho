@@ -52,9 +52,10 @@ class TelaPedido(TesteNumeroOpcoes):
         print("1 - Fazer Pedido")
         print("2 - Listar Pedido")
         print("3 - Excluir Pedido")
+        print("4 - Alterar Pedido")
         print("0 - Retornar")
 
-        opcao = self.teste_numero_opcoes("Escolha a opção: ", [0,1,2,3])
+        opcao = self.teste_numero_opcoes("Escolha a opção: ", [0,1,2,3,4])
         print("\n")
         return opcao
 
@@ -69,6 +70,22 @@ class TelaPedido(TesteNumeroOpcoes):
         prazo_entrega = self.teste_do_inteiro("Prazo do pedido (quantidade de dias): ")
 
         return {"cnpj": cnpj, "codigo": codigo,
+                "codigo_produto": codigo_produto,
+                "quantidade": quantidade,
+                "data": data,
+                "valor_frete": valor_frete,
+                "prazo_entrega": prazo_entrega}
+    
+    def altera_dados_pedidos(self):
+        print("-------- NOVOS DADOS PEDIDOS ----------")
+        cnpj = self.teste_do_cnpj("CNPJ do fornecedor: ")
+        codigo_produto = self.teste_do_inteiro("Codigo do Produto: ")
+        quantidade = self.teste_do_inteiro("Quantidade do pedido: ")
+        data = self.teste_da_data("Data do pedido feito (DD/MM/AAAA): ")
+        valor_frete = self.teste_do_float("Valor do frete do pedido: ")
+        prazo_entrega = self.teste_do_inteiro("Prazo do pedido (quantidade de dias): ")
+
+        return {"cnpj": cnpj,
                 "codigo_produto": codigo_produto,
                 "quantidade": quantidade,
                 "data": data,

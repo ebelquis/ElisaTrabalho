@@ -1,6 +1,7 @@
 from limite.tela_relatorios import TelaRelatorios
 from excessoes.NaoEncontradoNaListaException import NaoEncontradoNaListaException
 
+
 class ControladorRelatorios():
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema

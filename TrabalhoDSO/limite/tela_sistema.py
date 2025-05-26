@@ -1,5 +1,4 @@
 class TelaSistema:
-
     def teste_numero_opcoes(self, mensagem = " ", valores_validos = None):
         while True:
             valor_recebido = input(mensagem)

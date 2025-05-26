@@ -4,6 +4,7 @@ from entidade.cliente import Cliente
 from excessoes.EncontradoNaListaException import EncontradoNaListaException
 from excessoes.NaoEncontradoNaListaException import NaoEncontradoNaListaException
 
+
 class ControladorPessoas():
     def __init__(self, controlador_sistema):
         self.__vendedores = []

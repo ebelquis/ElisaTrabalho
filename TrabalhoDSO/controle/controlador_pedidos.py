@@ -16,6 +16,9 @@ class ControladorPedidos():
         return None
 
     def incluir_pedido(self):
+        self.__controlador_sistema.controlador_fornecedores.lista_fornecedores()
+        self.__controlador_sistema.controlador_produtos.lista_produtos()
+
         dados_pedido = self.__tela_pedido.pega_dados_pedido()
         codigo_pedido = self.pega_pedido_por_codigo(dados_pedido["codigo"])
         try:
@@ -43,6 +46,44 @@ class ControladorPedidos():
                     raise NaoEncontradoNaListaException("fornecedor")
             else:
                 raise EncontradoNaListaException()
+        except Exception as e:
+            self.__tela_pedido.mostra_mensagem(e)
+
+    def alterar_pedido(self):
+        self.lista_pedidos()
+        codigo_pedido = self.__tela_pedido.seleciona_pedido()
+        pedido = self.pega_pedido_por_codigo(codigo_pedido)
+        try:
+            if pedido is not None:
+                self.__controlador_sistema.controlador_fornecedores.lista_fornecedores()
+                self.__controlador_sistema.controlador_produtos.lista_produtos()
+                novos_dados = self.__tela_pedido.altera_dados_pedidos()
+                novo_fornecedor = self.__controlador_sistema.controlador_fornecedores.pega_fornecedor_por_cnpj(novos_dados["cnpj"])
+                if novo_fornecedor is not None:
+                    novo_produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(novos_dados["codigo_produto"])
+                    if (novo_produto is not None) and (novo_produto.codigo_produto == novo_fornecedor.produto.codigo_produto):
+                        produto_antigo = pedido.produto
+                        produto_antigo.quant_estoque -= pedido.quantidade
+                        novo_valor = (float(novos_dados["quantidade"]) * float(novo_fornecedor.preco) + float(novos_dados["valor_frete"]))
+            
+                        pedido.quantidade = int(novos_dados["quantidade"])
+                        pedido.produto = novo_produto
+                        pedido.data = novos_dados["data"]
+                        pedido.valor = novo_valor
+                        pedido.fornecedor = novo_fornecedor
+                        pedido.frete = float(novos_dados["valor_frete"])
+                        pedido.prazo_entrega = int(novos_dados["prazo_entrega"])
+                        
+                        novo_produto.quant_estoque += int(novos_dados["quantidade"])
+                        
+                        self.__tela_pedido.mostra_mensagem("Pedido alterado com sucesso!")
+                    else:
+                        raise NaoEncontradoNaListaException("produto")
+                else:
+                    raise NaoEncontradoNaListaException("fornecedor")
+            else:
+                raise NaoEncontradoNaListaException("pedido")
+            
         except Exception as e:
             self.__tela_pedido.mostra_mensagem(e)
 
@@ -86,6 +127,7 @@ class ControladorPedidos():
         lista_opcoes = {1: self.incluir_pedido,
                         2: self.lista_pedidos,
                         3: self.excluir_pedido,
+                        4: self.alterar_pedido,
                         0: self.retornar}
 
         continua = True

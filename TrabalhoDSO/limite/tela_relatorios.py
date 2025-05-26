@@ -1,5 +1,6 @@
 from excessoes.TesteNumeroOpcoesException import TesteNumeroOpcoes
 
+
 class TelaRelatorios(TesteNumeroOpcoes):
     def __init__(self):
         pass
